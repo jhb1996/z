@@ -26,12 +26,11 @@ module.exports.routes = {
   //  ╔═╗╔═╗╦  ╔═╗╔╗╔╔╦╗╔═╗╔═╗╦╔╗╔╔╦╗╔═╗
   //  ╠═╣╠═╝║  ║╣ ║║║ ║║╠═╝║ ║║║║║ ║ ╚═╗
   //  ╩ ╩╩  ╩  ╚═╝╝╚╝═╩╝╩  ╚═╝╩╝╚╝ ╩ ╚═╝
+
+  //note: must start everthing with a /
   'POST /checkoutpaypal':'PaymentController.checkoutPaypal',
-  'POST /a/q':'googleTrendsBackend.q',
-  'POST /q':'googleTrendsBackend.q',
-
-  'POST /googleTrendsBackend/':'googleTrendsBackend.GoogleTrendsBackend',
-
+  'POST /googletrendsbackend/':'GoogleTrendsBackendController.googleTrendsBackend',
+  'POST /amazonbackend/':'AmazonBackendController.amazonBackend',
 
 
 

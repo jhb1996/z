@@ -3,7 +3,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import googleChartVue from '@/components/googleChartVue'
 import Paypal from '@/components/Paypal'
-import myComp from '@/components/myComp'
+import amazonVue from '@/components/amazonVue'
 import myComp2 from '@/components/myComp2'
 
 
@@ -16,25 +16,25 @@ const Baz = { template: '<div>baz</div>' }
 
 const coupon = { template: '<input>' }
 
-function dynamicProps () {
-  console.log('dynamic props:')
-  var screwVariable = 'dynamicfiller'
-  // console.log('googleChartVue', googleChartVue)
-  console.log('App', App)
-  // console.log('App', Appx.screw)
-  // console.log('App', App.data().screw)
-  console.log(App.data())
-  screwVariable = App.data //App.data().screw
-  // screwVariable = t.a
+// function dynamicProps () {
+//   console.log('dynamic props:')
+//   var screwVariable = 'dynamicfiller'
+//   // console.log('googleChartVue', googleChartVue)
+//   console.log('App', App)
+//   // console.log('App', Appx.screw)
+//   // console.log('App', App.data().screw)
+//   console.log(App.data())
+//   screwVariable = App.data //App.data().screw
+//   // screwVariable = t.a
 
-  return {
-    prop1: 'testProp1',
-    prop2: 'testProp2',
-    screw: App.data().screw,
-    allData: 'ss',
-    prop3: 'testProp3'
-  }
-}
+//   return {
+//     prop1: 'testProp1',
+//     prop2: 'testProp2',
+//     screw: App.data().screw,
+//     allData: 'ss',
+//     prop3: 'testProp3'
+//   }
+// }
 
 Vue.use(Router)
 
@@ -53,11 +53,10 @@ export default new Router({
       // which will be rendered into <router-view>s with corresponding names.
       components: {
         default: Foo,
-        coupon: coupon,
         googleChartVue: googleChartVue,
+        amazonVue: amazonVue,
+        myComp2: myComp2,
         paypalView: Paypal,
-        myComp: myComp,
-        myComp2: myComp2
       },
       // props: { googleChartVue: dynamicProps, myComp: dynamicProps(), myComp2: dynamicProps()}
 

@@ -6,17 +6,9 @@
  */
 
 module.exports = {
-    q(req,res) {
-        console.log('---------------------------')
-        console.log('starting')
-
-        //loads in the "object" which connects to google trends
-
-
-    },
-
-    async GoogleTrendsBackend(req,res){
+    async googleTrendsBackend(req,res){
       console.log('GoogleTrendsBackend called')
+      console.log('req.body', req.body)
       var {fiftyOverFifty, timelineObjLst} = await callTrendsAPI(req.body.inputStr)
       chartData = formatChartData(timelineObjLst, req.body.inputStr)
       res.send({chartData:chartData, fiftyOverFifty:fiftyOverFifty})

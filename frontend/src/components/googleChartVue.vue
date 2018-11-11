@@ -10,6 +10,7 @@
     <!-- <h1 v-if="props"> screw {{ x }}  end</h1>
     <h1> print f {{ f }} {{ props }} {{ prop1 }} {{ screw }} </h1>
     <h1> {{ getAllScrew() }} </h1> -->
+    <h1> Google Trends </h1>
     <GChart
       type="LineChart"
       :data=myChartData
