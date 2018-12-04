@@ -4,15 +4,25 @@ import Router from 'vue-router'
 import googleChartVue from '@/components/googleChartVue'
 import Paypal from '@/components/Paypal'
 import amazonVue from '@/components/amazonVue'
+import aliBabaVue from '@/components/aliBabaVue'
 import myComp2 from '@/components/myComp2'
+import listProductsVue from '@/components/listProductsVue'
+// import productComponent from '@/components/altFormat'
+// import productComponent from '@/components/productComponent'
+import productBox from '@/components/productBox'
 
 
 import App from '../App'
 
+//this step is needed for the component to be recognized in the main App.vue. Don't need to do this if the component is being displayed using the router view
+Vue.component('productBox', productBox)
+// Vue.component('productComponent', productComponent)
+// console.log('tc:', productComponent)
 
 const Foo = { template: '<div>foo</div>' }
 const Bar = { template: '<div>bar</div>' }
 const Baz = { template: '<div>baz</div>' }
+
 
 const coupon = { template: '<input>' }
 
@@ -55,8 +65,12 @@ export default new Router({
         default: Foo,
         googleChartVue: googleChartVue,
         amazonVue: amazonVue,
+        aliBabaVue: aliBabaVue,
         myComp2: myComp2,
         paypalView: Paypal,
+        // productComponent: productComponent,
+        productBox: productBox,
+        listProductsVue: listProductsVue,
       },
       // props: { googleChartVue: dynamicProps, myComp: dynamicProps(), myComp2: dynamicProps()}
 

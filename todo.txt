@@ -1,0 +1,4 @@
+Before going live:
+1. CORS were fully enabled (in security.js) for development ease. Make sure that CORS settings are secure by whitelisting only the client server and websites being scraped
+2. CSRF was disabled (in security.js) to avoid scraping problems. Renenable it and find a way to get around the 403 error when scraping from amazon.
+3.

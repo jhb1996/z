@@ -31,6 +31,9 @@ module.exports.routes = {
   'POST /checkoutpaypal':'PaymentController.checkoutPaypal',
   'POST /googletrendsbackend/':'GoogleTrendsBackendController.googleTrendsBackend',
   'POST /amazonbackend/':'AmazonBackendController.amazonBackend',
+  'POST /alibababackend/':'AlibabaBackendController.alibabaBackend',
+  'POST /aliexpressbackend/':'AlixpressBackendController.aliExpressBackend',
+
 
 
 

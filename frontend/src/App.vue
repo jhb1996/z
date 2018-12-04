@@ -5,6 +5,13 @@
     <!-- experimenting with amazon linking -->
     <!-- <a href="https://www.amazon.com/gp/product/B00513J04I/ref=as_li_ss_il?ie=UTF8&th=1&linkCode=li2&tag=productrese0c-20&linkId=648f5cfac90e50b3aedad756d2faffe3&language=en_US" target="_blank"><img border="0" src="//ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00513J04I&Format=_SL160_&ID=AsinImage&MarketPlace=US&ServiceVersion=20070822&WS=1&tag=productrese0c-20&language=en_US" ></a><img src="https://ir-na.amazon-adsystem.com/e/ir?t=productrese0c-20&language=en_US&l=li2&o=1&a=B00513J04I" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /> -->
 
+<!-- image example  -->
+
+
+<!-- <img class="picCore pic-Core-v" src="//ae01.alicdn.com/kf/HTB1LTD6GpmWBuNjSspdq6zugXXa4/Rabbit-Fur-Keychain-Bunny-Rabbit-Fur-Fashion-Pom-Pom-Keychain-Bunny-Toy-Rabbit-Keychain-14-cm.jpg_220x220.jpg" 
+alt="Rabbit Fur Keychain Bunny Rabbit Fur Fashion Pom Pom Keychain Bunny Toy Rabbit Keychain 14 cm Tote Car Charm Pendant(China)"> 
+    
+     -->
     <h1>Type anything that you think might be trending</h1>
     <input v-model='inputStr' placeholder='enter your catagory'>
 
@@ -17,6 +24,7 @@
     <router-view v-if="showChart" class="view two" name="googleChartVue" :myChartData=chartData></router-view>
 
     <router-view v-if="showAmazon" class="view three" name="amazonVue" :amazonData=amazonData></router-view>
+    <router-view v-if="showAliBaba" class="view three" name="aliBabaVue" :aliBabaData=aliBabaData></router-view>
 
 
     <!-- <router-view class="view four" name="myComp"></router-view>
@@ -54,7 +62,7 @@ export default {
   name: 'App',
 
   localData: {//doesn't seem to be accesible outside the innitial loadup
-    d: 'd1'
+    startupvariable: 'd1'
   },
   data() {
 
@@ -71,6 +79,8 @@ export default {
 
         showAmazon:false,
 
+        showAliBaba:false,
+
         amazonData:[{stripeSrc:"//ws-na.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=\
 1&Operation=GetAdHtml&MarketPlace=US&source=ss&ref=as_ss_li_til&ad_type=product_link&\
 tracking_id=productrese0c-20&language=en_US&marketplace=amazon&region=US&placement=\
@@ -84,7 +94,8 @@ link_opens_in_new_window=true"},{stripeSrc:"//ws-na.amazon-adsystem.com/widgets/
 tracking_id=productrese0c-20&language=en_US&marketplace=amazon&region=US&placement=\
 B076C5YVCK&asins=B076C5YVCK&linkId=773c8967780d517a7b83b3d4e573a238&show_border=true&\
 link_opens_in_new_window=true"}],
-        // counter:3,
+
+      aliBabaData: [{productName:'placeholder', price:3.0, imgSrc:'//sc01.alicdn.com/kf/HTB1yhG9bOLaK1RjSZFxq6ymPFXaI/disposable-absorbent-catdog-urinate-pee-pads-mat.jpg_220x220.jpg'},{productName:'placeholder', price:3.0, imgSrc:'//sc01.alicdn.com/kf/HTB1yhG9bOLaK1RjSZFxq6ymPFXaI/disposable-absorbent-catdog-urinate-pee-pads-mat.jpg_220x220.jpg'},{productName:'placeholder', price:3.0, imgSrc:'//sc01.alicdn.com/kf/HTB1yhG9bOLaK1RjSZFxq6ymPFXaI/disposable-absorbent-catdog-urinate-pee-pads-mat.jpg_220x220.jpg'}],
       }
   },
 
@@ -106,7 +117,8 @@ link_opens_in_new_window=true"}],
       // console.log(chartData)
       this.chartData = chartData
       this.showChart = true
-      this.callAmazon()
+      this.callAliBaba()
+      // this.callAmazon()
     },
 
     async callAmazon(){
@@ -129,7 +141,31 @@ link_opens_in_new_window=true"}],
       console.log('amazonObjLst[0]',amazonObjLst[0])
       this.amazonData = amazonObjLst
       this.showAmazon = true
+      // this.callAliBaba()
     },
+
+    async callAliBaba(){
+      console.log('calling AliBabaBackened with inputStr', this.inputStr)
+
+      var options = {
+        method: 'POST',
+        // mode: 'no-cors'
+        //headers {
+        //   'Accept': 'application/json',
+        //   'Content-Type': 'application/json'
+        // },
+        body: JSON.stringify({inputStr:this.inputStr})
+      }
+      var response = await fetch('http://localhost:1337/alibababackend',options)
+      
+      console.log('AliBabaresponse',response)
+      var aliBabaObjLst = await response.json()
+      console.log('AliBabaObjLst',aliBabaObjLst)
+      console.log('AliBabaObjLst[0]',aliBabaObjLst[0])
+      this.aliBabaData = aliBabaObjLst
+      this.showAliBaba = true
+    },
+
 
     async callAliExpress(){
       console.log('calling AliExpress with inputStr', this.inputStr)

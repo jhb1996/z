@@ -150,6 +150,8 @@ var scrapeAmazonSearch = async function(searchTerm) {
         request.get(finalURL, function(err, response, html) {
             response=response||{}
             if (err || response.statusCode != 200) {
+                console.log('response:::', response)
+
                 console.log('couldnt get first html. response.status code is', response.statusCode)
                 reject(err);
             } else {
@@ -220,7 +222,7 @@ var scrapeAmazonProductURL = async function(productName, url) {
         });
 
         if (html=='my new html'){
-            return {productName:productName, primaryRank:-1, price:-1, stripeSrc:''}
+            return {productName:productName, primaryRank:-1, priceFloat:-1, stripeSrc:''}
         }
         // write the html to a file
         // var fs = require('fs');
@@ -247,8 +249,8 @@ var scrapeAmazonProductURL = async function(productName, url) {
 
         const priceRootID = '#priceblock_ourprice'
         price = $(priceRootID).text()
-        console.log('price', price)
-
+        const priceFloat = parseFloat(priceStr)
+        console.log('priceFloat', priceFloat)
         itemCodeReg = /(?<=\dp\/\B|dp\/\b)(.*?)(?=\/ref\B|\/ref\b)/ //matches the first instance between dp/ and ref
         const itemCode = url.match(itemCodeReg)[0] 
         console.log('item code =', itemCode)
@@ -258,12 +260,12 @@ var scrapeAmazonProductURL = async function(productName, url) {
 tracking_id=productrese0c-20&language=en_US&marketplace=amazon&region=US&\
 placement=" + itemCode + "&asins=" + itemCode + "&linkId=773c8967780d517a7b83b3d4e573a238&\
 show_border=true&link_opens_in_new_window=true"
-        return ({productName:productName, primaryRank:primaryRank, price:price, 
+        return ({productName:productName, primaryRank:primaryRank, priceFloat:priceFloat, 
             stripeSrc:stripeSrc})
 
     } catch (error) {
         console.log('there was an error getting the price/rank. Probably this was an unusual content type')
-        return {productName:productName, primaryRank:-1, price:-1, stripeSrc:''}
+        return {productName:productName, primaryRank:-1, priceFloat:-1, stripeSrc:''}
     }
 }
 
