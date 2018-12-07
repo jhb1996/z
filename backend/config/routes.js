@@ -32,7 +32,7 @@ module.exports.routes = {
   'POST /googletrendsbackend/':'GoogleTrendsBackendController.googleTrendsBackend',
   'POST /amazonbackend/':'AmazonBackendController.amazonBackend',
   'POST /alibababackend/':'AlibabaBackendController.alibabaBackend',
-  'POST /aliexpressbackend/':'AlixpressBackendController.aliExpressBackend',
+  'POST /aliexpressbackend/':'AliExpressBackendController.aliExpressBackend',
 
 
 

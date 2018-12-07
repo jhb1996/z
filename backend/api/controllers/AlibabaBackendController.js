@@ -19,7 +19,7 @@ module.exports = {
 
 var request = require('request')
 var cheerio = require('cheerio')
-const scrapeProductLimit = 3
+const scrapeProductLimit = 10
 
 var scrapeAlibaba = async function(searchTerm) {
 
@@ -72,7 +72,7 @@ var scrapeAlibaba = async function(searchTerm) {
             //could try different ways to speed this up like locating a smaller element and looking by parent/child/next
             var name = $(element).find('h2.title').find('a').text()
             var linkRaw = $(element).find('h2.title').find('a').attr('href')
-            var link = linkRaw.trim().substring(2)
+            var link = 'https://'+linkRaw.trim().substring(2)
 
             var priceStrRaw = $(element).find('div.price').find('b').text().trim()
             var priceReg = /[^$]+$/

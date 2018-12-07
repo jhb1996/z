@@ -7,7 +7,7 @@
 
 module.exports = {
     async aliExpressBackend(req,res){
-      console.log('alibabaBackend called')
+      console.log('aliExpressBackend called')
       console.log('req.body', req.body)
       console.log('req.body.inputStr', req.body.inputStr)
 
@@ -19,7 +19,7 @@ module.exports = {
 
 var request = require('request')
 var cheerio = require('cheerio')
-const scrapeProductLimit = 3
+const scrapeProductLimit = 10
 
 /* returns {productName, primaryRank, price, stripeSrc}
  * 
@@ -68,7 +68,7 @@ var scrapeAliExpress = async function(searchTerm) {
             var productName = $(element).find('a.history-item.product').attr('title')
             var shortName = $(element).find('a.history-item.product').text()
             var linkRaw = $(element).find('a.history-item.product').attr('href')
-            var link = linkRaw.trim().substring(2)
+            var link = 'https://'+linkRaw.trim().substring(2)
             var imgSrc = $(element).find('img.picCore.pic-Core-v').attr('src')
             var priceStrRaw = $(element).find('span.value').text().trim()
             // console.log('priceStrRaw', priceStrRaw)

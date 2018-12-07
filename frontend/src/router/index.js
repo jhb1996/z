@@ -15,6 +15,7 @@ import productBox from '@/components/productBox'
 import App from '../App'
 
 //this step is needed for the component to be recognized in the main App.vue. Don't need to do this if the component is being displayed using the router view
+Vue.component('listProductsVue', listProductsVue)
 Vue.component('productBox', productBox)
 // Vue.component('productComponent', productComponent)
 // console.log('tc:', productComponent)

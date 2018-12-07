@@ -19,62 +19,14 @@ alt="Rabbit Fur Keychain Bunny Rabbit Fur Fashion Pom Pom Keychain Bunny Toy Rab
 
       <div id="app" class="columns">
         <div class="column">
-    <!-- <li v-for="(fruit, index) in fruits" :key="`fruit-${index}`"></li> -->
-
-          <!-- <productComponent v-for="product in products" :product=product :key=d /> -->
-          <!-- <productComponent :product="products[1]"/> -->
         </div>
       </div>
-
-      <!-- <router-view class="view two" name="productComponent" v-for="product in products" :product="product"></router-view> -->
-
-      <!-- <productComponent v-for="product in products" :product="product"/> -->
     </div>
   </div>
-
-
-        <!-- <router-view class="view two" name="productComponent" :product=products[1]></router-view> -->
-
-    <!-- <div id="app" class="columns">
-      <div class="column">
-        <product-component v-for="product in products" :product="product"/>
-      </div>
-    </div> -->
-
-<!-- <div class="product">
-      <div class="box">
-        <article class="media">
-          <div class="media-left">
-            <figure class="image is-64x64">
-              <img :src="product.img" alt="Image">
-            </figure>
-          </div>
-          <div class="media-content">
-            <div class="content">
-              <p>
-                <strong>{{product.name}}</strong> <small>{{product.handle}}</small>
-                <br>
-                {{product.product}}
-              </p>
-            </div>
-              <div class="level-left">
-                <a class="level-item">
-                  <span class="icon is-small"><i class="fas fa-heart"></i></span>
-                  <span class="likes">{{product.likes}}</span>
-                </a>
-              </div>
-          </div>
-        </article>
-      </div>
-    </div>  -->
-
   </div>
 </template> 
 
 <script>
-// import productComponent from './components/productComponent'
-
-
 export default {
   
   /* eslint-disable */
@@ -88,54 +40,72 @@ export default {
 
       return {
         products: [{
-          id: 1,
-          name: 'default1',
-          handle: '@default1',
+          name: 'default (listProductsVue)',
           img: "https://placeimg.com/200/200/arch",
-          product: "default product1",
-          likes: 10,
+          fullName: "default fullName ((listProductsVue)",
+          price: 1.00,
+          link: 'yahoo.com',
+          specialName1: 'default Special Name1',
+          specialValue1: 222222,
+          specialName2: 'default Special Name2',
+          specialValue2: 222222,
           },
           {
-          id: 1,
-          name: 'default2',
-          handle: '@default2',
+          name: 'default (listProductsVue)',
           img: 'https://semantic-ui.com/images/avatar2/large/matthew.png',
-          product: "default product2",
-          likes: 10,
+          fullName: "default fullName (listProductsVue)",
+          price: 1.00,
+          link: 'yahoo.com',
+          specialName1: 'default Special Name1',
+          specialValue1: 222222,
+          specialName2: 'default Special Name2',
+          specialValue2: 222222,
           },
           {
-          id: 1,
-          name: 'default3',
-          handle: '@default3',
+          name: 'default (listProductsVue)',
           img: 'https://semantic-ui.com/images/avatar2/large/matthew.png',
-          product: "default product3",
-          likes: 10,
+          fullName: "default fullName (listProductsVue)",
+          price: 1.00,
+          link: 'yahoo.com',
+          specialName1: 'default Special Name1',
+          specialValue1: 222222,
+          specialName2: 'default Special Name2',
+          specialValue2: 222222,
           },{
-          id: 1,
-          name: 'default1',
-          handle: '@default1',
+          name: 'default (listProductsVue)',
           img: 'https://semantic-ui.com/images/avatar2/large/matthew.png',
-          product: "default product1",
-          likes: 10,
+          fullName: "default fullName (listProductsVue)",
+          price: 1.00,
+          link: 'yahoo.com',
+          specialName1: 'default Special Name1',
+          specialValue1: 222222,
+          specialName2: 'default Special Name2',
+          specialValue2: 222222,
           },
           {
-          id: 1,
-          name: 'default2',
-          handle: '@default2',
+          name: 'default (listProductsVue)',
           img: 'https://semantic-ui.com/images/avatar2/large/matthew.png',
-          product: "default product2",
-          likes: 10,
+          fullName: "default fullName (listProductsVue)",
+          price: 1.00,
+          link: 'yahoo.com',
+          specialName1: 'default Special Name1',
+          specialValue1: 222222,
+          specialName2: 'default Special Name2',
+          specialValue2: 222222,
           },
           {
-          id: 1,
-          name: 'default3',
-          handle: '@default3',
+          name: 'default (listProductsVue)',
           img: 'https://semantic-ui.com/images/avatar2/large/matthew.png',
-          product: "default product3",
-          likes: 10,
+          fullName: "default fullName (listProductsVue)",
+          price: 1.00,
+          link: 'yahoo.com',
+          specialName1: 'default Special Name1',
+          specialValue1: 222222,
+          specialName2: 'default Special Name2',
+          specialValue2: 222222,
           }],
-      }
-  },
+        }
+    },
 
 
   methods: {

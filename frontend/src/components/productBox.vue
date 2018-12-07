@@ -1,6 +1,7 @@
  <template>
   <ul class="listOfproducts">
-    <li :key="index" class=productBox>
+    <button v-on:click="tester()">tester()</button>
+    <li class=productBox>
       <img :src="product.img" alt="" @click="openLink(product.link)">
 
 <!-- alt="thumbnail" class="blg-post-tile-image" style="opacity: 1;"> -->
@@ -10,8 +11,8 @@
           {{ cutName(product.name) }}
         </h2>
       <div class="product-price">
-        <span> price {{ product.price }} </span> 
-        <span> {{product.specialName1}} {{product.specialValue1}} </span> 
+        <span>{{ prepPrice(product.price) }}</span> 
+        <span>  {{product.specialName1}} {{product.specialValue1}} </span> 
         <span> other thing </span>
       </div>
     </li>
@@ -19,8 +20,6 @@
 </template>
 
 <script>
-// import { mapActions } from 'vuex';
-// import btn from './Btn';
 export default {
   props: {
       product: {
@@ -42,11 +41,30 @@ export default {
   // },
   methods: {
     //cuts the name down to the appropriate size to be shown
+    tester(name){
+      console.log('--tester')
+      console.log(this.product.link)
+    },
     cutName(name){
-      return name.substring(0,70)+'...'
+      var cut = name.substring(0,33)+'...'
+      // if (cut.length<80){cut=cut+'\n'}
+      return cut
+    },
+    prepPrice(price){
+      var priceString = price.toString()
+      var decimalIdx = priceString.indexOf('.')
+      if (decimalIdx!=-1){
+        priceString = priceString.substring(0,decimalIdx+3)
+      }
+      console.log(price)
+      console.log(decimalIdx, priceString.length)
+      if (decimalIdx===priceString.length-2){
+        priceString = priceString+'0'
+      }
+      return '$'+priceString
     },
     openLink(link){
-      window.open(this.products[0].link, "_blank");    
+      window.open(this.product.link, "_blank");    
     }
   },
 };
@@ -55,6 +73,7 @@ export default {
 <style scoped>
     img {
       width: 150px;
+      height:150px;
       border-radius: 2px;
       box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.5);
       transition: width 1s;
@@ -63,15 +82,6 @@ export default {
       cursor: pointer;
     }
 
-  .listOfproducts {
-    width: 100%;
-    /* max-width: 1000px; */
-    margin: 0 auto;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    padding: 0;
-  }
   .productBox {
     width: 300px;
     background-color: #fff;

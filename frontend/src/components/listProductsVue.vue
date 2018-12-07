@@ -4,7 +4,9 @@
 <div id="app">
   <!-- changing section to ul creates an offset from the first card -->
     <section class="productScroller">
+     <!-- <abcd class="listOfproducts"> -->
       <productBox v-for="(product, index) in products" :product=product :key="index" class="productBox"/>
+      <!-- </abcd> -->
     </section>
   </div>
 </template>
@@ -92,18 +94,27 @@ export default {
   // },
   methods: {
     //cuts the name down to the appropriate size to be shown
-    cutName(name){
-      return name.substring(0,70)+'...'
-    },
-    openLink(link){
-      window.open(this.products[0].link, "_blank");    
-    }
+    // cutName(name){
+    //   return name.substring(0,70)+'...'
+    // },
+    // openLink(link){
+    //   window.open(this.products[0].link, "_blank");    
+    // }
   },
 };
 </script>
 
 <style scoped>
-  .listOfproducts {
+  /* .listOfproducts {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 0;
+  } */
+  /* .listOfproducts {
     width: 100%;
     max-width: 10000px;
     margin: 0 auto;
@@ -111,7 +122,7 @@ export default {
     flex-wrap: wrap;
     justify-content: space-around;
     padding: 0;
-  }
+  } */
 
 .productScroller {
   display: flex;
