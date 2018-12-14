@@ -1,16 +1,8 @@
 /* eslint-disable */
 <template>
   <div id="app" prop1="777777777">
-    <!-- <input placeholder='enter your coupon code' @blur="onCouponApplied"> -->
-     <!-- <button v-on:click="onCouponApplied()">'enter your coupon code'</button> -->
-     <!-- <button v-on:click="onCouponApplied()">'enter your coupon code'</button> -->
-    <!-- <button v-on:click="printProps()">'printProps'</button>
-    <h1> {{ myChartData }} </h1>  -->
-
-    <!-- <h1 v-if="props"> screw {{ x }}  end</h1>
-    <h1> print f {{ f }} {{ props }} {{ prop1 }} {{ screw }} </h1>
-    <h1> {{ getAllScrew() }} </h1> -->
     <h1> Google Trends </h1>
+    <button v-on:click="chartTester()">chartTester()</button>
     <GChart
       type="LineChart"
       :data=myChartData
@@ -29,7 +21,7 @@ export default {
   props: {
     myChartData: {
       type: Array,
-      default: 'placeholder'
+      default: ['placeholder']
     },
   },
 
@@ -42,7 +34,7 @@ export default {
       // Array will be automatically processed with visualization.arrayToDataTable function
       chartData: [
         ["temp", "will", "overwrite", "temp2"],
-        ["will", 1000, 400, 200],
+        ["will2", 0, 400, 200],
         ["be", 1170, 460, 250],
         ["overwritten", 660, 1120, 300],
         ["temp3", 1030, 1000, 1000]
@@ -57,10 +49,10 @@ export default {
     };
   },
   methods: {
-    printProps(){
-      // alert('printProps pressed')
-      console.log('this',this);
-      console.log('this._props', this._props);
+    chartTester(name){
+      console.log('--tester')
+      // console.log('this:',this);
+      console.log('this._props.myChartData', this._props.myChartData);
     },
   },
 };

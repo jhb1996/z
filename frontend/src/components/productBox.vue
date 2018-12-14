@@ -2,32 +2,46 @@
   <ul class="listOfproducts">
     <button v-on:click="tester()">tester()</button>
     <li class=productBox>
-      <img :src="product.img" alt="" @click="openLink(product.link)">
+      <a :href="product.link"><img :src="prepImgSrc(product.imgSrc)" alt="" @click="openLink(product.link)"></a>
 
 <!-- alt="thumbnail" class="blg-post-tile-image" style="opacity: 1;"> -->
 
         <h2 class="product-name"
             @click="openLink(product.link)">
-          {{ cutName(product.name) }}
+          {{ cutName(product.productName) }}
         </h2>
       <div class="product-price">
-        <span>{{ prepPrice(product.price) }}</span> 
+        <span>{{ prepPrice(product.priceFloat) }}</span> 
         <span>  {{product.specialName1}} {{product.specialValue1}} </span> 
-        <span> other thing </span>
+        <!-- <span> other thing </span> -->
       </div>
     </li>
   </ul>
 </template>
 
 <script>
+import p from '@/../../sharedFrontAndBack/classes/product'
+var Product = p.Product
+console.log(Product)
 export default {
   props: {
       product: {
-        type: Object,
+        type: Product,
+          // default: Product(
+          // productName= 'default (productBox)',
+          // fullName= 'defaultFullName',
+          // imgSrc= 'https=//semantic-ui.com/images/avatar2/large/matthew.png',
+          // priceFloat= 1.00,
+          // link= 'yahoo.com',
+          // specialName1= 'default Special Name1',
+          // specialValue1= 111111,
+          // specialName2= 'default Special Name2', //currently unused
+          // specialValue2= 111111),
         default: {
-          name: 'default',
-          img: 'https://semantic-ui.com/images/avatar2/large/matthew.png',
-          price: 1.00,
+          productName: 'default (productBox)',
+          fullName: 'defaultFullName',
+          imgSrc: 'https://semantic-ui.com/images/avatar2/large/matthew.png',
+          priceFloat: 1.00,
           link: 'yahoo.com',
           specialName1: 'default Special Name1',
           specialValue1: 111111,
@@ -43,12 +57,19 @@ export default {
     //cuts the name down to the appropriate size to be shown
     tester(name){
       console.log('--tester')
-      console.log(this.product.link)
+      console.log(this.product.imgSrc)
     },
     cutName(name){
-      var cut = name.substring(0,33)+'...'
+      var cut = name.substring(0,30)+'...'
       // if (cut.length<80){cut=cut+'\n'}
       return cut
+    },
+    prepImgSrc(imgSrc){
+      // if (imgSrc!=){
+      //   return imgSrc
+      // }
+      // else
+      return imgSrc
     },
     prepPrice(price){
       var priceString = price.toString()
@@ -56,8 +77,6 @@ export default {
       if (decimalIdx!=-1){
         priceString = priceString.substring(0,decimalIdx+3)
       }
-      console.log(price)
-      console.log(decimalIdx, priceString.length)
       if (decimalIdx===priceString.length-2){
         priceString = priceString+'0'
       }

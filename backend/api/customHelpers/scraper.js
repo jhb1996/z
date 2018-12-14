@@ -1,22 +1,37 @@
 //note, any arg which = None gets overwitten by the variable default
-function Product (name = 'creationDefaultName', img = 'https://placeimg.com/200/200/arch',
-  fullName = 'creationDefaultFullName', price = -1, link = 'https://yahoo.com',
-  specialName1 = 'creationDefaultSpecialName1', specialValue1 = -1,
-  specialName2 = 'creationDefaultSpecialName2', specialValue2 = -1) {
-  // console.log(name, img, fullName, price, link, specialName1, specialValue1, specialName2, specialValue2)
-  this.name = name
-  this.img = img
-  this.fullName = fullName
-  this.price = price
-  this.link = link
-  this.specialName1 = specialName1
-  this.specialValue1 = specialValue1
-  this.specialName2 = specialName2
-  this.specialValue2 = specialValue1
-  return this
+
+// function Product (name = 'creationDefaultName', img = 'https://placeimg.com/200/200/arch',
+//   fullName = 'creationDefaultFullName', price = -1, link = 'https://yahoo.com',
+//   specialName1 = 'creationDefaultSpecialName1', specialValue1 = -1,
+//   specialName2 = 'creationDefaultSpecialName2', specialValue2 = -1) {
+//   // console.log(name, img, fullName, price, link, specialName1, specialValue1, specialName2, specialValue2)
+//   this.name = name
+//   this.img = img
+//   this.fullName = fullName
+//   this.price = price
+//   this.link = link
+//   this.specialName1 = specialName1
+//   this.specialValue1 = specialValue1
+//   this.specialName2 = specialName2
+//   this.specialValue2 = specialValue1
+//   return this
+// }
+
+
+function Scraper(urlFormulator, htmlGetter, htmlParser){
+  this.scrapeSearchStr = async function (SearchStrRaw){
+    console.log('scrapeSearchStr called')
+    const finalURL = urlFormulator(SearchStrRaw)
+    console.log('scraper: finalURL', finalURL)
+    const html = await htmlGetter(finalURL)
+    const productObjArr = await htmlParser(html)
+    return productObjArr
+  }
 }
 
-var test = 'testy'
+// function ScraperApiHandler(req, res){
+//   console.log('Scraper called')
+// }
 
 //export default creates problems when running the code directly through node.
 // export default {
@@ -26,10 +41,6 @@ var test = 'testy'
 
 //allows direct importing without creating a model
 // export default Product
-
-function Scraper(urlFormulator, scrapingFunction){
-  console.log('Scraper called')
-}
 
 module.exports = {
   Scraper: Scraper

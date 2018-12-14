@@ -39,7 +39,7 @@ var scrapeAliExpress = async function(searchTerm) {
         request.get(finalURL, function(err, response, html) {
             response=response||{}
             if (err || response.statusCode != 200) {
-                console.log('couldnt get firts html. response.status code is', response.statusCode)
+                console.log('couldnt get first html. response.status code is', response.statusCode)
                 console.log(response)
                 reject(err);
             } else {

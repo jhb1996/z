@@ -28,14 +28,14 @@ module.exports.routes = {
   //  ╩ ╩╩  ╩  ╚═╝╝╚╝═╩╝╩  ╚═╝╩╝╚╝ ╩ ╚═╝
 
   //note: must start everthing with a /
-  'POST /checkoutpaypal':'PaymentController.checkoutPaypal',
   'POST /googletrendsbackend/':'GoogleTrendsBackendController.googleTrendsBackend',
+  'POST /scraper/':'ScraperController.doScraping',
+
+  /* unused since global scraper is being used
   'POST /amazonbackend/':'AmazonBackendController.amazonBackend',
   'POST /alibababackend/':'AlibabaBackendController.alibabaBackend',
   'POST /aliexpressbackend/':'AliExpressBackendController.aliExpressBackend',
-
-
-
+*/
 
 
   //  ╦ ╦╔═╗╔╗ ╦ ╦╔═╗╔═╗╦╔═╔═╗

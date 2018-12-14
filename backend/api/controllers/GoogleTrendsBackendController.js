@@ -8,22 +8,12 @@
 module.exports = {
     async googleTrendsBackend(req,res){
       console.log('GoogleTrendsBackend called')
-      console.log('req.body', req.body)
-      var {fiftyOverFifty, timelineObjLst} = await callTrendsAPI(req.body.inputStr)
-      chartData = formatChartData(timelineObjLst, req.body.inputStr)
+      // console.log('req.body', req.body)
+      var {fiftyOverFifty, timelineObjLst} = await callTrendsAPI(req.body.searchStr)
+      chartData = formatChartData(timelineObjLst, req.body.searchStr)
+      // console.log('chartData',chartData)
+      console.log('google Trends backend finished')
       res.send({chartData:chartData, fiftyOverFifty:fiftyOverFifty})
-    },
-
-    checkoutPaypal(req,res){
-    console.log(req.body)
-        var execute_payment_json = {
-        "payer_id": req.body.data.payerID,  
-        };
-        const payment ={}
-        payment.amount=req.body.data.amount
-        const paymentID=req.body.data.paymentID
-        res.ok()
-
     },
 };
 
@@ -31,7 +21,7 @@ module.exports = {
 const googleTrends = require('google-trends-api')
 
 //can optimize this by comining it with callTrendsAPI
-function formatChartData(timelineObjLst,searchTerm){
+function formatChartData(timelineObjLst, searchTerm){
     var chartData = [["Date", searchTerm]]
     for(i in timelineObjLst){
         let subArr = []
@@ -41,9 +31,11 @@ function formatChartData(timelineObjLst,searchTerm){
         }else{
           subArr.push('')
         }
-        subArr.push(Obj.value)
+        subArr.push(Obj.value[0])
         chartData.push(subArr)
     }
+
+    // console.log(chartData)
 
     return chartData
     // chartData : [
@@ -55,13 +47,13 @@ function formatChartData(timelineObjLst,searchTerm){
     //   ],
 }
 
-async function callTrendsAPI(inputStr){
+async function callTrendsAPI(searchStr){
   var today = new Date()
   var priorDate = new Date();
   priorDate.setDate(new Date().getDate() - 90)
 
   var options = {
-      keyword: inputStr,
+      keyword: searchStr,
       startTime: today,
       endTime: priorDate,
       category: 18,

@@ -7,28 +7,18 @@ import router from './router'
 
 Vue.config.productionTip = false
 
-// Vue.component('coupon', { 
-//   template: '<input>'
-// })
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
   components: { App },
   template: '<App/>',
-  myData: 'dddddddddddddd',  //{some_test_data: 'someTestData'},
+  myData: 'Some_test_data',  
   methods: {
-    myFunc: function (event) {
-      // `this` inside methods points to the Vue instance
+    aTestFunc: function (event) {
       alert('Hello ' + this.name + '!')
-      // `event` is the native DOM event
-      if (event) {
-        alert(event.target.tagName)
-      }
     },
-    onCouponApplied2 () {
-      alert('coupon applied')
-    }
   }
 
 })
