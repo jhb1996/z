@@ -28,6 +28,8 @@ module.exports.routes = {
   //  ╩ ╩╩  ╩  ╚═╝╝╚╝═╩╝╩  ╚═╝╩╝╚╝ ╩ ╚═╝
 
   //note: must start everthing with a /
+  // a POST request to /googletrendsbackend/ will be handed to the function 
+  // googleTrendsBackend(args) insidee the file GoogleTrendsBackendController
   'POST /googletrendsbackend/':'GoogleTrendsBackendController.googleTrendsBackend',
   'POST /scraper/':'ScraperController.doScraping',
 

@@ -1,10 +1,8 @@
  <template>
   <ul class="listOfproducts">
-    <button v-on:click="tester()">tester()</button>
+    <!-- <button v-on:click="tester()">tester()</button> -->
     <li class=productBox>
       <a :href="product.link"><img :src="prepImgSrc(product.imgSrc)" alt="" @click="openLink(product.link)"></a>
-
-<!-- alt="thumbnail" class="blg-post-tile-image" style="opacity: 1;"> -->
 
         <h2 class="product-name"
             @click="openLink(product.link)">
@@ -27,17 +25,7 @@ export default {
   props: {
       product: {
         type: Product,
-          // default: Product(
-          // productName= 'default (productBox)',
-          // fullName= 'defaultFullName',
-          // imgSrc= 'https=//semantic-ui.com/images/avatar2/large/matthew.png',
-          // priceFloat= 1.00,
-          // link= 'yahoo.com',
-          // specialName1= 'default Special Name1',
-          // specialValue1= 111111,
-          // specialName2= 'default Special Name2', //currently unused
-          // specialValue2= 111111),
-        default: {
+        default: {//defualts are ignored in any case when data is passed to the component
           productName: 'default (productBox)',
           fullName: 'defaultFullName',
           imgSrc: 'https://semantic-ui.com/images/avatar2/large/matthew.png',
@@ -50,9 +38,7 @@ export default {
           },
       },
     },
-  //   components: {
-  //   // btn,
-  // },
+
   methods: {
     //cuts the name down to the appropriate size to be shown
     tester(name){

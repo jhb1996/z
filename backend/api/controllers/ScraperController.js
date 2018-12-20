@@ -11,15 +11,12 @@ var cheerio = require('cheerio')
 var Product = require('../../../sharedFrontAndBack/classes/product')
 const scrapeProductLimit = 30
 
-
+//The functions which can be called by router.js in response to a GET/POST/PUT request
 module.exports = {
     async doScraping(req,res){
       // console.log('s', Scraper)
-
       console.log('doScraping called on', req.body.site)
       console.log('req.body.searchStr', req.body.searchStr)
-
-
       if (req.body.site === 'aliBaba'){
         var scraper = new Scraper.Scraper(aliBabaUrlFormulator, basicHtmlGetter, aliBabaHtmlParser)
       }else if (req.body.site === 'aliExpress'){
@@ -27,39 +24,26 @@ module.exports = {
       }else if (req.body.site === 'amazon'){
         var scraper = new Scraper.Scraper(amazonUrlFormulator, amazonHtmlGetter, amazonHtmlParser)
       }
-
       console.log('productObjLst', productObjLst)
       var productObjLst = await scraper.scrapeSearchStr(req.body.searchStr)
       res.send(productObjLst)
     },
 };
 
-
+// asynchronously gets HTML with a get request to finalURL
 async function basicHtmlGetter(finalURL){
   console.log('basicHtmlGetter',finalURL)
   var html = await new Promise(function(resolve, reject) {
-    // Do async job
-      // request.get(finalURL, function(err, response, html) {
-      //     response=response||{}
-      //     if (err || response.statusCode != 200) {
-      //         console.log('couldnt get firts html. response.status code is', response.statusCode)
-      //         console.log(response)
-      //         reject(err);
-      //     } else {
-      //         resolve(html);
-      //     }
-      // })
       var customHeaderRequest = request.defaults({
           headers: {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) \
       AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36'}
       })
-      
       customHeaderRequest.get(finalURL, function(err, response, html){
           // console.log('response', response)
           response=response||{}
           if (err || response.statusCode != 200) {
               console.log('couldnt get firts html. response.status code is', response.statusCode)
-              console.log(response)
+              // console.log(response)
               reject(err);
           } else {
               resolve(html);
@@ -67,23 +51,6 @@ async function basicHtmlGetter(finalURL){
       });
       return html
   })
-  // var html = await new Promise(function(resolve, reject) {
-  //   // Do async job
-  //     request.get(finalURL, function(err, response, html) {
-  //         response=response||{}
-  //         if (err || response.statusCode != 200) {
-  //             console.log('couldnt get firts html. response.status code is', response.statusCode)
-  //             console.log(response)
-  //             reject(err);
-  //         } else {
-  //             resolve(html);
-  //         }
-  //     })
-  // })
-
-
-
-
   // // write the html to a file
   //   var fs = require('fs');
   //   fs.writeFile("tempHtml.html", html, function(err) {
@@ -114,6 +81,7 @@ async function aliBabaHtmlParser(html){
     var productObjArray = []
 
     $(context).each(function(i, element) {
+      try{
         if (i<scrapeProductLimit){
             //could try different ways to speed this up like asynchronously looking through each element
             //could also try locating a smaller element and looking by parent/child/next rather than find each time
@@ -133,13 +101,19 @@ async function aliBabaHtmlParser(html){
             // console.log('i', i)
             // console.log('name: ', name)
             // console.log('link: ', link)
-            // console.log('price', priceStr)
+            // console.log('priceStr', priceStr)
+            // console.log('priceFloat', priceFloat)
+
             // console.log('imgSrc:', imgSrc)
 
             // productObjArray.push({productName: name, priceFloat:priceFloat, link:link, imgSrc:imgSrc})
-            var newProduct = new Product.Product({productName:productName, imgSrc:imgSrc, fullName: null,  price: priceFloat, link: link})
+            var newProduct = new Product.AliBabaProduct({productName:productName, imgSrc:imgSrc, fullName: null,  priceFloat: priceFloat, link: link})
             productObjArray.push(newProduct.getAsObject())
         }
+      }
+      catch(err){
+        console.log('error in aliBaba scraper with item', i )//, 'err:', err)
+      }
     });
     return productObjArray
 }
@@ -179,7 +153,7 @@ async function aliExpressHtmlParser(html){  //construct the url
           // console.log('imgSrc: ', imgSrc)
           // console.log('priceFloat =', priceFloat)
           // productArray.push({productName: productName, priceFloat:priceFloat, link:link, imgSrc:imgSrc})
-          var newProduct = new Product.Product({productName:productName, imgSrc:imgSrc, fullName: fullName,  price: priceFloat, link: link})
+          var newProduct = new Product.AliExpressProduct({productName:productName, imgSrc:imgSrc, fullName: fullName,  price: priceFloat, link: link})
           productObjArray.push(newProduct.getAsObject())
       }
   });
@@ -196,6 +170,8 @@ function amazonUrlFormulator (searchStrRaw){
   return finalURL
 }
 
+// asynchronously gets HTML with a get request to finalURL
+// has special settings need to not get blocked by Amazon (still often has problems getting Amazon HTML)
 async function amazonHtmlGetter(finalURL){
   var html = await new Promise(function(resolve, reject) {
     // Do async job
@@ -203,7 +179,7 @@ async function amazonHtmlGetter(finalURL){
       headers: {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36',
     'authority': 'www.amazon.com',
     'method': 'GET',
-    'path': '/s/ref=nb_sb_noss_2?url=search-alias%3Daps&field-keywords=pot&rh=i%3Aaps%2Ck%3Apot',
+    // 'path': '/s/ref=nb_sb_noss_2?url=search-alias%3Daps&field-keywords=pot&rh=i%3Aaps%2Ck%3Apot',
     'scheme': 'https',
     'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
     // 'accept-encoding': 'gzip, deflate, br',
@@ -220,19 +196,30 @@ customHeaderRequest.get(finalURL, function(err, response, html){
   response=response||{}
   if (err || response.statusCode != 200) {
       console.log('couldnt get firts html. response.status code is', response.statusCode)
-      console.log(response)
+      // console.log(response)
       reject(err);
   } else {
-      console.log(response)
+      // console.log(response)
       resolve(html);
   }
   });
 })
+
+// write the html to a file
+  // var fs = require('fs');
+  // fs.writeFile("tempHtml.html", html, function(err) {
+  //     if(err) {
+  //         throw err
+  //         // return console.log(err);
+  //     }
+  
+  //     console.log("The file was saved!");
+  // }); 
 return html
 }
 
 async function amazonHtmlParser(html){
-  // helper
+  // helper. Scrapes a particular product URL
   async function scrapeAmazonProductURL (productName, url) {
     try {
         console.log('url', url)
@@ -279,7 +266,6 @@ async function amazonHtmlParser(html){
         primaryRank = matches[0] //for now the other rankings are not used
         // console.log('primaryRank', primaryRank)
   
-  
         const priceRootID = '#priceblock_ourprice'
         priceStr = $(priceRootID).text()
         console.log('priceStr', priceStr)
@@ -289,18 +275,10 @@ async function amazonHtmlParser(html){
         const itemCode = url.match(itemCodeReg)[0] 
         console.log('item code =', itemCode)
         
-  //       var stripeSrc = "//ws-na.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=\
-  // 1&Operation=GetAdHtml&MarketPlace=US&source=ss&ref=as_ss_li_til&ad_type=product_link&\
-  // tracking_id=productrese0c-20&language=en_US&marketplace=amazon&region=US&\
-  // placement=" + itemCode + "&asins=" + itemCode + "&linkId=773c8967780d517a7b83b3d4e573a238&\
-  // show_border=true&link_opens_in_new_window=true"
-            //  src="//ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B07F67TQBS&Format=_SL160_&ID=AsinImage&MarketPlace=US&ServiceVersion=20070822&WS=1&tag=productrese0c-20&language=en_US" ></a><img src="https://ir-na.amazon-adsystem.com/e/ir?t=productrese0c-20&language=en_US&l=li2&o=1&a=B07F67TQBS" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
         imgSrc = '//ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=' +itemCode+ '&Format=_SL160_&ID=AsinImage&MarketPlace=US&ServiceVersion=20070822&WS=1&tag=productrese0c-20&language=en_US'
-
         link = 'https://www.amazon.com/produce-aisle-3802105-Russet-Potatoes/dp/' + itemCode+ '/ref=as_li_ss_il?ie=UTF8&qid=1544369764&sr=8-4&ppw=fresh&keywords=potato&linkCode=li2&tag=productrese0c-20&linkId=d66978d313e7a01d03898fd656f58cd8&language=en_US'
 
-
-        var newProduct = new Product.Product({productName:productName, imgSrc:imgSrc, fullName: null,  priceFloat: priceFloat, specialName1:'Rank', specialValue1:primaryRank, link: link})
+        var newProduct = new Product.AmazonProduct({productName:productName, imgSrc:imgSrc, fullName: null,  priceFloat: priceFloat, specialName1:'Rank', specialValue1:primaryRank, link: link})
         return (newProduct.getAsObject())
 
         // return ({productName:productName, primaryRank:primaryRank, priceFloat:priceFloat, 
@@ -311,14 +289,14 @@ async function amazonHtmlParser(html){
         return null//new Product.Product().getAsObject()
     }
   }
-  // helper
+  // helper: makes a get request to amazon's search page and returns a list of the URLs returned. 
+  // Amazon's formatting of their product pages is not uniform so some of these URLs will cause 
+  // an Error to be thrown and caught by ScrapeAmazonProductURL
   async function scrapeAmazonSearch (html){
     var $ = cheerio.load(html);
     //<a class="a-link-normal s-access-detail-page  s-color-twister-title-link a-text-normal" title="Pandas Cookbook: Recipes for Scientific Computing, Time Series Analysis and Data Visualization using Python" href="/gp/slredirect/picassoRedirect.html/ref=pa_sp_atf_aps_sr_pg1_1?ie=UTF8&amp;adId=A090032828WWURM8SVJPM&amp;url=https%3A%2F%2Fwww.amazon.com%2FPandas-Cookbook-Scientific-Computing-Visualization%2Fdp%2F1784393878%2Fref%3Dsr_1_1_sspa%3Fie%3DUTF8%26qid%3D1541129158%26sr%3D8-1-spons%26keywords%3Dpandas%26psc%3D1&amp;qualifier=1541129158&amp;id=6772343048897330&amp;widgetName=sp_atf"><h2 data-attribute="Pandas Cookbook: Recipes for Scientific Computing, Time Series Analysis and Data Visualization using Python" data-max-rows="2" class="a-size-medium s-inline  s-access-title  a-text-normal"><span class="a-offscreen">[Sponsored]</span>Pandas Cookbook: Recipes for Scientific Computing, Time Series Analysis and Data Visualization using Python</h2></a>
     const context = 'a.a-link-normal.s-access-detail-page.s-color-twister-title-link.a-text-normal'
-    
     var productArray = []
-
     $(context).each(function(i, element) {
         console.log('i', i)
         var gotEl = $(element)
@@ -362,109 +340,3 @@ async function amazonHtmlParser(html){
 
   return productObjLst
 }
-
-
-
-/* 
-* returns {productName, primaryRank, price, stripeSrc}
-* 
-*/
-// var scrapeAmazonSearch = async function(searchTerm) {
-
-  //construct the url
-  // const baseURL = 'https://www.amazon.com/s/ref=nb_sb_noss_2?url=search-alias%3Daps&field-keywords='
-  // const middleURL = '&rh=i%3Aaps%2Ck%3A'
-  // var fSearchTerms = searchTerm.trim()
-  // fSearchTerms = fSearchTerms.replace(' ', '+')
-  // const finalURL = baseURL+fSearchTerms+middleURL+fSearchTerms
-
-  // console.log('finalURL', finalURL)
-  // var html = await new Promise(function(resolve, reject) {
-  //   // Do async job
-  //     request.get(finalURL, function(err, response, html) {
-  //         response=response||{}
-  //         if (err || response.statusCode != 200) {
-  //             console.log('response:::', response)
-
-  //             console.log('couldnt get first html. response.status code is', response.statusCode)
-  //             reject(err);
-  //         } else {
-  //             resolve(html);
-  //         }
-  //     })
-  // })
-  // write the html to a file
-  //   var fs = require('fs');
-  //   fs.writeFile("tempHtml.html", html, function(err) {
-  //       if(err) {
-  //           throw err
-  //           // return console.log(err);
-  //       }
-    
-  //       console.log("The file was saved!");
-  //   }); 
-
-//   var $ = cheerio.load(html);
-//   //<a class="a-link-normal s-access-detail-page  s-color-twister-title-link a-text-normal" title="Pandas Cookbook: Recipes for Scientific Computing, Time Series Analysis and Data Visualization using Python" href="/gp/slredirect/picassoRedirect.html/ref=pa_sp_atf_aps_sr_pg1_1?ie=UTF8&amp;adId=A090032828WWURM8SVJPM&amp;url=https%3A%2F%2Fwww.amazon.com%2FPandas-Cookbook-Scientific-Computing-Visualization%2Fdp%2F1784393878%2Fref%3Dsr_1_1_sspa%3Fie%3DUTF8%26qid%3D1541129158%26sr%3D8-1-spons%26keywords%3Dpandas%26psc%3D1&amp;qualifier=1541129158&amp;id=6772343048897330&amp;widgetName=sp_atf"><h2 data-attribute="Pandas Cookbook: Recipes for Scientific Computing, Time Series Analysis and Data Visualization using Python" data-max-rows="2" class="a-size-medium s-inline  s-access-title  a-text-normal"><span class="a-offscreen">[Sponsored]</span>Pandas Cookbook: Recipes for Scientific Computing, Time Series Analysis and Data Visualization using Python</h2></a>
-//   const context = 'a.a-link-normal.s-access-detail-page.s-color-twister-title-link.a-text-normal'
-  
-//   var productArray = []
-
-//   $(context).each(function(i, element) {
-//       console.log('i', i)
-//       var gotEl = $(element)
-//       var linkURL = gotEl.attr('href')
-//       const isSponsored = (linkURL.substring(0,57) === '/gp/slredirect/picassoRedirect.html/ref=pa_sp_atf_aps_sr_' )
-//       if (isSponsored){
-//           linkURL= 'https://www.amazon.com/'+linkURL
-//       }
-//       var productName = gotEl.attr('title')
-//       console.log('prodcutName:', productName)
-//       productArray.push({productName:productName, linkURL:linkURL, isSponsored:isSponsored})
-//   })
-
-//   return productArray
-
-// }
-
-
-
-
-
-
-// function strip(str) {
-//   return str.replace(/^\s+|\s+$/g, '');
-// }
-
-/** FOR Testing as an indepent file copy everything from here up into an independent file and call nodemon <filename> */
-
-// async function main(){
-  //     // //could gather more data like the rank in other catagories as well as the catgory in which the item is being ranked
-  //     // rankReg = new RegExp('(?<=\#)(.*?)(?=[ ])', 'g')//matches the string following a hashtag
-  //     // const rankRootID = '#SalesRank'
-  //     // const rankInclusiveText = $(rankRootID).text()
-  //     // // console.log('rank', rankInclusiveText)
-  //     // const matches = rankInclusiveText.match(rankReg) 
-  //     // primaryRank = matches[0] //for now the other rankings are not used
-  //     // console.log('primaryRank', primaryRank)
-  
-  //     var productInfoLst = await getAmazonData('potato')
-  //     console.log('final productInfoLst', productInfoLst)
-  //     // const url = 'https://amazon.com//gp/slredirect/picassoRedirect.html/ref=pa_sp_atf_aps_sr_pg1_1?ie=UTF8&adId=A0350809E7EQFII53NW6&url=https%3A%2F%2Fwww.amazon.com%2FDel-Monte-Pull-Top-Golden-15-25-Ounce%2Fdp%2FB078SZM9PT%2Fref%3Dsr_1_1_a_it%3Fie%3DUTF8%26qid%3D1541178055%26sr%3D8-1-spons%26keywords%3Dcorn%26psc%3D1&qualifier=1541178055&id=8572413585308077&widgetName=sp_atf'
-  //     // var html = await new Promise(function(resolve, reject) {
-  //     // 	// Do async job
-  //     //     request.get(url, function(err, response, html) {
-  //     //         response=response||{}
-  //     //         if (err || response.statusCode != 200) {
-  //     //             console.log('couldnt get firts html. response.status code is', response.statusCode)
-  //     //             reject(err);
-  //     //         } else {
-  //     //             resolve(html);
-  //     //         }
-  //     //     })
-  //     // })
-  
-  
-  // }
-
-  // main()

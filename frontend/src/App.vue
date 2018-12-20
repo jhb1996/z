@@ -8,16 +8,18 @@
 
 
     <button v-on:click="getDataFromServerScrapers()">submit</button>
-    <div> 
+    <!-- <div> 
       <div></div>
       <button v-on:click="tester()">tester()</button>
-    </div>
+    </div> -->
     <router-view v-if="showChart" class="view two" name="googleChartVue" :myChartData=chartData></router-view>
 
     <h1 v-if="showAliExpress">top AliExpress products</h1>
     <router-view v-if="showAliExpress" class="view five" name="listProductsVue" :products=aliExpressProductLst></router-view>
+    
     <h1 v-if="showAliBaba">top AliBaba products</h1>
     <router-view v-if="showAliBaba" class="view three" name="listProductsVue" :products=aliBabaProductLst></router-view>
+    
     <h1 v-if="showAmazon">top Amazon products</h1>
     <router-view v-if="showAmazon" class="view five" name="listProductsVue" :products=amazonProductLst></router-view>
   </div>
@@ -53,7 +55,7 @@ export default {
         showAliBaba:false,
         showAliExpress:false,
 
-        aliBabaProductLst: [new Product()],//[new Product(name='aliBaba placeholder'),new Product(), new Product(),new Product(),new Product(),new Product(),new Product(),new Product(),new Product(),new Product()],
+        aliBabaProductLst: [new Product({productName:'yay it works'})],//[new Product(name='aliBaba placeholder'),new Product(), new Product(),new Product(),new Product(),new Product(),new Product(),new Product(),new Product(),new Product()],
         aliExpressProductLst: [new Product()],//[new Product(name='aliExpress placeholder'),new Product(), new Product(),new Product(),new Product(),new Product(),new Product(),new Product(),new Product(),new Product()],
         amazonProductLst: [new Product()],//[new Product(name='aliExpress placeholder'),new Product(), new Product(),new Product(),new Product(),new Product(),new Product(),new Product(),new Product(),new Product()],
     }
@@ -92,28 +94,6 @@ export default {
       this.showChart = true
     },
 
-    // async callAmazon(){
-    //   console.log('calling amazon with searchStr', this.searchStr)
-
-    //   var options = {
-    //     method: 'POST',
-    //     // mode: 'no-cors'
-    //     //headers {
-    //     //   'Accept': 'application/json',
-    //     //   'Content-Type': 'application/json'
-    //     // },
-    //     body: JSON.stringify({searchStr:this.searchStr})
-    //   }
-    //   var response = await fetch('http://localhost:1337/amazonbackend',options)
-      
-    //   console.log('amazonresponse',response)
-    //   var amazonObjLst = await response.json()
-    //   console.log('amazonObjLst',amazonObjLst)
-    //   console.log('amazonObjLst[0]',amazonObjLst[0])
-    //   this.amazonData = amazonObjLst
-    //   this.showAmazon = true
-    // },
-
     async callServerScraper(site, searchStr){
       console.log('calling scraper on ' + site + ' with searchStr', searchStr)
       var options = {
@@ -127,57 +107,28 @@ export default {
       }
       var response = await fetch('http://localhost:1337/scraper',options)
       
-      console.log('scraper response:',response)
+      // console.log('scraper response:',response)
       var productObjLst = await response.json()
-      console.log('productObjLst', productObjLst) 
+      // console.log('productObjLst', productObjLst) 
       var productLst = prepareDataForListProductsVue(productObjLst )
       console.log('productLst',productLst)
-      console.log('product[0]',productLst[0])
+      // console.log('product[0]',productLst[0])
 
       this[site+'ProductLst'] = productLst
       this['show'+capFirstLetter(site)] = true
     },
 
-    async callAliExpress(){
-      console.log('calling AliExpress with searchStr', this.searchStr)
-
-      var options = {
-        method: 'POST',
-        // mode: 'no-cors'
-        //headers {
-        //   'Accept': 'application/json',
-        //   'Content-Type': 'application/json'
-        // },
-        body: JSON.stringify({searchStr:this.searchStr})
-      }
-      var response = await fetch('http://localhost:1337/aliexpressbackend',options)
-      var aliExpressObjLst = await response.json()
-      console.log('aliExpressObjLst:', aliExpressObjLst)
-      var aliExpressProductLst = prepareDataForListProductsVue(aliExpressObjLst)
-      console.log('aliExpressProductLst',aliExpressProductLst)
-      console.log('AliExpressObjLst',aliExpressObjLst)
-      console.log('AliExpressObjLst[0]',aliExpressObjLst[0])
-      this.aliExpressProductLst = aliExpressProductLst
-      this.showAliExpress = true
-    },
-
     //takes data returned from the server and preps it to be shown
-
-    changeChart () {
-        console.log('changeScrew: this', this)
-        console.log('changeScrew: this._data', this._data)
-        console.log('changeScrew: this._data', this.data)
-      }
   },
 }
 
 function prepareDataForListProductsVue(serverData){
+  //Note: Sorting (if it occurs) is assumed to happen server side
   console.log('data gotten from server =', serverData)
   var productLst = []
   console.log('serverData.length', serverData.length)
   for (var i=0; i<serverData.length; i++){
     var serverObj = serverData[i]
-    // {productName: productName, priceFloat:priceFloat, link:link, imgSrc:imgSrc}
     var product = new Product(serverObj)
 //       var product = new Product({productName: serverObj.productName, imgSrc: serverObj.imgSrc,
 // fullName: serverObj.fullName, priceFloat: serverObj.priceFloat, link: serverObj.link,
@@ -197,6 +148,7 @@ function capFirstLetter(str){
 }
 
 </script>
+
 
 <style>
 #app {
