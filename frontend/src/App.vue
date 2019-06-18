@@ -4,79 +4,81 @@
 
 
     <h1>Type anything that you think might be trending</h1>
-    <input v-model='searchStr' placeholder='enter your catagory'>
+    <input v-model='searchStr0' placeholder='overwritten'>
+    <input v-model='searchStr1' placeholder=''>
+    <input v-model='searchStr2' placeholder=''>
+    <input v-model='searchStr3' placeholder=''>
+    <input v-model='searchStr4' placeholder=''>
 
-
-    <button v-on:click="getDataFromServerScrapers()">submit</button>
-    <!-- <div> 
+    <button v-on:click="getDataFromGoogleTrends()">compare</button>
+    <div> 
       <div></div>
       <button v-on:click="tester()">tester()</button>
-    </div> -->
-    <router-view v-if="showChart" class="view two" name="googleChartVue" :myChartData=chartData></router-view>
+    </div>
+    <h1 v-if="showChart0">Google Trends</h1>
+    <router-view v-if="showChart0" class="view two" name="googleChartVue" :myChartData=chartData0></router-view>
+    <router-view v-if="showChart1" class="view two" name="googleChartVue" :myChartData=chartData1></router-view>
 
-    <h1 v-if="showAliExpress">top AliExpress products</h1>
-    <router-view v-if="showAliExpress" class="view five" name="listProductsVue" :products=aliExpressProductLst></router-view>
-    
-    <h1 v-if="showAliBaba">top AliBaba products</h1>
-    <router-view v-if="showAliBaba" class="view three" name="listProductsVue" :products=aliBabaProductLst></router-view>
-    
-    <h1 v-if="showAmazon">top Amazon products</h1>
-    <router-view v-if="showAmazon" class="view five" name="listProductsVue" :products=amazonProductLst></router-view>
   </div>
 </template>
 
 <script>
-// var Product = require ('@/classes/classes')
-// var Product = require('@/../../sharedFrontAndBack/classes/product').Product
-import p from '@/../../sharedFrontAndBack/classes/product'
-var Product = p.Product
 export default {
   
   /* eslint-disable */
   name: 'App',
 
-  localData: {//doesn't seem to be accesible outside the innitial loadup
-    startupvariable: 'd1'
+  localData: {//nothing here is accesible accesible outside the innitial loadup
+    startingTestVariable: 'startingTestValue'
   },
   data() {
       return {
-      searchStr: 'potato hat',
-      chartData : [
+      searchStr0: 'potato',
+      searchStr1: 'unicorn',
+      searchStr2: 'frozen',
+      searchStr3: 'baseball',
+      searchStr4: 'wolf',
+      chartData0 : [ //totally unimportant what is here except for testing since in practice the chart data will be updated before the chart is ever displayed
         ["Year", "Sales"],
         ["0001", 1],
         ["0002", 1],
         ["0003", 0],
         ["0004", 1]
-      ],
-        showChart:false,
-
-        showAmazon:false,
-
-        showAliBaba:false,
-        showAliExpress:false,
-
-        aliBabaProductLst: [new Product({productName:'yay it works'})],//[new Product(name='aliBaba placeholder'),new Product(), new Product(),new Product(),new Product(),new Product(),new Product(),new Product(),new Product(),new Product()],
-        aliExpressProductLst: [new Product()],//[new Product(name='aliExpress placeholder'),new Product(), new Product(),new Product(),new Product(),new Product(),new Product(),new Product(),new Product(),new Product()],
-        amazonProductLst: [new Product()],//[new Product(name='aliExpress placeholder'),new Product(), new Product(),new Product(),new Product(),new Product(),new Product(),new Product(),new Product(),new Product()],
+      ],      
+      showChart0:true,
+      chartData1 : [ //totally unimportant what is here except for testing since in practice the chart data will be updated before the chart is ever displayed
+        ["Year", "Sales"],
+        ["0001", 1],
+        ["0002", 1],
+        ["0003", 0],
+        ["0004", 1]
+      ],      
+        showChart1:true,
     }
   },
 
   methods: 
     {
     tester(){
-      console.log(new Product())
-      console.log(new Product(productName='aliBaba Placeholder'))
+      console.log('this button can be used to call a function to print stuff out for deubgging')
     },
 
-    async getDataFromServerScrapers(){
-      this.callGoogleTrends()
-      this.callServerScraper('aliBaba',this.searchStr)
-      this.callServerScraper('aliExpress',this.searchStr)
-      this.callServerScraper('amazon',this.searchStr)
+    //this needs to be modified to call the server 5 times with one
+    async getDataFromGoogleTrends(){
+      //fiftyOverFifty indicates whether or not the product is trending
+      var trendsObj0 = await this.callGoogleTrends(this.searchStr0)
+      console.log(trendsObj0.chartData)
+      this.chartData0 = trendsObj0.chartData
+      this.showChart0 = true
+
+      var trendsObj1 = await this.callGoogleTrends(this.searchStr1)
+      console.log(trendsObj1.chartData)
+      this.chartData1 = trendsObj1.chartData
+      this.showChart1 = true
     },
 
-    async callGoogleTrends(){
-      console.log('searchStr', this.searchStr)
+    async callGoogleTrends(searchStr){
+      console.log('searchStr', searchStr)
 
       var options = {
         method: 'POST',
@@ -85,62 +87,15 @@ export default {
         //   'Accept': 'application/json',
         //   'Content-Type': 'application/json'
         // },
-        body: JSON.stringify({searchStr:this.searchStr})
+        body: JSON.stringify({searchStr:searchStr})
       }
       var response = await fetch('http://localhost:1337/googletrendsbackend',options)
       var {chartData, fiftyOverFifty} = await response.json()
-      // console.log(chartData)
-      this.chartData = chartData
-      this.showChart = true
+
+      return {chartData, fiftyOverFifty}
     },
 
-    async callServerScraper(site, searchStr){
-      console.log('calling scraper on ' + site + ' with searchStr', searchStr)
-      var options = {
-        method: 'POST',
-        // mode: 'no-cors'
-        //headers {
-        //   'Accept': 'application/json',
-        //   'Content-Type': 'application/json'
-        // },
-        body: JSON.stringify({site:site,searchStr:searchStr})
-      }
-      var response = await fetch('http://localhost:1337/scraper',options)
-      
-      // console.log('scraper response:',response)
-      var productObjLst = await response.json()
-      // console.log('productObjLst', productObjLst) 
-      var productLst = prepareDataForListProductsVue(productObjLst )
-      console.log('productLst',productLst)
-      // console.log('product[0]',productLst[0])
-
-      this[site+'ProductLst'] = productLst
-      this['show'+capFirstLetter(site)] = true
-    },
-
-    //takes data returned from the server and preps it to be shown
   },
-}
-
-function prepareDataForListProductsVue(serverData){
-  //Note: Sorting (if it occurs) is assumed to happen server side
-  console.log('data gotten from server =', serverData)
-  var productLst = []
-  console.log('serverData.length', serverData.length)
-  for (var i=0; i<serverData.length; i++){
-    var serverObj = serverData[i]
-    var product = new Product(serverObj)
-//       var product = new Product({productName: serverObj.productName, imgSrc: serverObj.imgSrc,
-// fullName: serverObj.fullName, priceFloat: serverObj.priceFloat, link: serverObj.link,
-// specialName1: serverObj.specialName1, specialValue1: serverObj.specialValue1,
-// specialName2: serverObj.specialName2, specialValue2: serverObj.specialValue2})
-    console.log('product' ,product)
-    productLst.push(product) 
-    console.log('productLst:', productLst)
-
-  }
-  console.log('productLst:', productLst)
-  return productLst
 }
 
 function capFirstLetter(str){

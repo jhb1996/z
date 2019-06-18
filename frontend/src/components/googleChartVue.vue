@@ -1,8 +1,7 @@
 /* eslint-disable */
 <template>
   <div id="app" prop1="777777777">
-    <h1> Google Trends </h1>
-    <button v-on:click="chartTester()">chartTester()</button>
+    <!-- <button v-on:click="chartTester()">chartTester()</button> -->
     <GChart
       type="LineChart"
       :data=myChartData
@@ -21,7 +20,13 @@ export default {
   props: {
     myChartData: {
       type: Array,
-      default: ['placeholder']
+      default: [
+        ["Year", "Sales"],
+        ["0001", 1],
+        ["0002", 1],
+        ["0003", 0],
+        ["0004", 1]
+      ],
     },
   },
 

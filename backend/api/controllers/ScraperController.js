@@ -157,6 +157,8 @@ async function aliExpressHtmlParser(html){  //construct the url
           productObjArray.push(newProduct.getAsObject())
       }
   });
+
+  console.log('--------------------------------------------------------=====----------===', productObjArray)
   return productObjArray
 
 }
