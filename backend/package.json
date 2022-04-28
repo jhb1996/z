@@ -6,7 +6,7 @@
   "keywords": [],
   "dependencies": {
     "@sailshq/lodash": "^3.10.3",
-    "async": "2.0.1",
+    "async": "2.6.4",
     "cheerio": "^1.0.0-rc.2",
     "google-trends-api": "^4.7.0",
     "paypal-rest-sdk": "^1.8.1",
