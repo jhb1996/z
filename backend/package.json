@@ -11,7 +11,7 @@
     "google-trends-api": "^4.7.0",
     "paypal-rest-sdk": "^1.8.1",
     "request": "^2.88.0",
-    "sails": "^1.0.2",
+    "sails": "^1.5.3",
     "sails-hook-orm": "^2.0.0-16",
     "sails-hook-sockets": "^1.4.0"
   },
